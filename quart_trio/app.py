@@ -2,6 +2,7 @@ import warnings
 from typing import Any, Optional, Union
 
 import trio
+import trio_asyncio
 from hypercorn.config import Config as HyperConfig
 from hypercorn.trio import serve
 from quart import Quart, request_started, websocket_started
@@ -76,7 +77,7 @@ class QuartTrio(Quart):
         scheme = "http" if config.ssl_enabled is None else "https"
         print("Running on {}://{} (CTRL + C to quit)".format(scheme, config.bind[0]))  # noqa: T001
 
-        trio.run(serve, self, config)
+        trio_asyncio.run(serve, self, config)
 
     async def handle_request(self, request: Request) -> Response:
         async with self.request_context(request) as request_context:
